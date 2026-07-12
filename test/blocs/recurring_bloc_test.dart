@@ -43,4 +43,19 @@ void main() {
     ],
     verify: (_) => verify(() => repo.update('r1', {'active': false})).called(1),
   );
+
+  blocTest<RecurringBloc, RecurringState>(
+    'update -> patches then reloads',
+    build: () {
+      when(() => repo.update('r1', any())).thenAnswer((_) async => _rule('r1'));
+      when(() => repo.list()).thenAnswer((_) async => [_rule('r1')]);
+      return RecurringBloc(repo);
+    },
+    act: (b) => b.add(RecurringUpdated('r1', const {'amount': 4000000})),
+    expect: () => [
+      isA<RecurringState>().having((s) => s.loading, 'loading', true),
+      isA<RecurringState>().having((s) => s.rules.length, 'count', 1),
+    ],
+    verify: (_) => verify(() => repo.update('r1', {'amount': 4000000})).called(1),
+  );
 }

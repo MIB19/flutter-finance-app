@@ -48,6 +48,14 @@ class RecurringDeleted extends RecurringEvent {
   List<Object?> get props => [id];
 }
 
+class RecurringUpdated extends RecurringEvent {
+  final String id;
+  final Map<String, dynamic> patch;
+  RecurringUpdated(this.id, this.patch);
+  @override
+  List<Object?> get props => [id, patch];
+}
+
 class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
   final RecurringRepository _repo;
 
@@ -69,6 +77,11 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
     on<RecurringDeleted>((e, emit) async {
       emit(const RecurringState(loading: true));
       await _repo.remove(e.id);
+      await _reload(emit);
+    });
+    on<RecurringUpdated>((e, emit) async {
+      emit(const RecurringState(loading: true));
+      await _repo.update(e.id, e.patch);
       await _reload(emit);
     });
   }

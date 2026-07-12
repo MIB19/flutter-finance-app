@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/dashboard_cubit.dart';
 import '../blocs/month_bloc.dart';
 import '../core/formatting.dart';
+import '../models/transaction.dart';
+import '../repositories/transaction_repository.dart';
+import 'transaction_form_screen.dart';
 import 'widgets/balance_card.dart';
 import 'widgets/transaction_tile.dart';
 
@@ -33,7 +36,7 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 _monthPicker(context, month.ym),
                 if (month.status == MonthStatus.loading) const LinearProgressIndicator(),
-                ...month.transactions.map((t) => TransactionTile(tx: t)),
+                ...month.transactions.map((t) => TransactionTile(tx: t, onTap: () => _openForm(context, existing: t))),
                 if (month.status == MonthStatus.loaded && month.transactions.isEmpty)
                   const Padding(padding: EdgeInsets.all(24), child: Center(child: Text('Belum ada transaksi bulan ini'))),
               ],
@@ -42,10 +45,19 @@ class HomeScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context).pushNamed('/transaction'),
+        onPressed: () => _openForm(context),
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  void _openForm(BuildContext context, {Transaction? existing}) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => TransactionFormScreen(
+        txRepo: context.read<TransactionRepository>(),
+        existing: existing,
+      ),
+    ));
   }
 
   Widget _monthPicker(BuildContext context, String ym) {

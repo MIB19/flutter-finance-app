@@ -25,7 +25,6 @@ import 'ui/login_screen.dart';
 import 'ui/onboarding_screen.dart';
 import 'ui/recurring_screen.dart';
 import 'ui/splash_screen.dart';
-import 'ui/transaction_form_screen.dart';
 
 class KeuanganApp extends StatelessWidget {
   final AuthService authService;
@@ -43,27 +42,26 @@ class KeuanganApp extends StatelessWidget {
     final familyRepo = FamilyRepository(api);
     final onboardingRepo = OnboardingRepository(api);
 
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => AuthBloc(authService)..add(AuthStarted())),
-        BlocProvider(create: (_) => DashboardCubit(financeRepo)),
-        BlocProvider(create: (_) => MonthBloc(finance: financeRepo, txRepo: txRepo)),
-        BlocProvider(create: (_) => CategoryCubit(categoryRepo)),
-        BlocProvider(create: (_) => RecurringBloc(recurringRepo)),
-        BlocProvider(create: (_) => FamilyCubit(familyRepo)),
-      ],
-      child: MaterialApp(
-        title: 'Keuangan',
-        theme: ThemeData(colorSchemeSeed: Colors.indigo, useMaterial3: true),
-        routes: {
-          '/transaction': (_) => TransactionFormScreen(
-                txRepo: txRepo,
-                onSaved: () {},
-              ),
-          '/recurring': (_) => const RecurringScreen(),
-          '/family': (_) => const FamilyScreen(),
-        },
-        home: _Root(onboardingRepo: onboardingRepo, authService: authService),
+    return RepositoryProvider<TransactionRepository>.value(
+      value: txRepo,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => AuthBloc(authService)..add(AuthStarted())),
+          BlocProvider(create: (_) => DashboardCubit(financeRepo)),
+          BlocProvider(create: (_) => MonthBloc(finance: financeRepo, txRepo: txRepo)),
+          BlocProvider(create: (_) => CategoryCubit(categoryRepo)),
+          BlocProvider(create: (_) => RecurringBloc(recurringRepo)),
+          BlocProvider(create: (_) => FamilyCubit(familyRepo)),
+        ],
+        child: MaterialApp(
+          title: 'Keuangan',
+          theme: ThemeData(colorSchemeSeed: Colors.indigo, useMaterial3: true),
+          routes: {
+            '/recurring': (_) => const RecurringScreen(),
+            '/family': (_) => const FamilyScreen(),
+          },
+          home: _Root(onboardingRepo: onboardingRepo, authService: authService),
+        ),
       ),
     );
   }

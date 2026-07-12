@@ -10,15 +10,24 @@ Flutter (Android) client for the family finance tracker. Talks to `keuangan-serv
    applicationId is `com.finance.ivan`.
 3. Put the Supabase Google provider's client ID/secret into Supabase.
 
+## Config
+
+Copy `.env.example` to `.env` and fill in your values (`.env` is gitignored):
+
+```
+API_BASE_URL=http://10.0.2.2:4000
+SUPABASE_URL=https://<project-ref>.supabase.co
+SUPABASE_ANON_KEY=<anon-key>
+GOOGLE_WEB_CLIENT_ID=<web-client-id>.apps.googleusercontent.com
+```
+
+Loaded at startup via `flutter_dotenv` (`.env` is declared as an asset in `pubspec.yaml`).
+
 ## Run
 
 ```bash
 flutter pub get
-flutter run \
-  --dart-define=API_BASE_URL=http://10.0.2.2:4000 \
-  --dart-define=SUPABASE_URL=https://<proj>.supabase.co \
-  --dart-define=SUPABASE_ANON_KEY=<anon> \
-  --dart-define=GOOGLE_WEB_CLIENT_ID=<web-client-id>
+flutter run
 ```
 
 ## Test

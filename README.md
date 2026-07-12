@@ -1,16 +1,33 @@
-# keuangan_app
+# keuangan-app
 
-A new Flutter project.
+Flutter (Android) client for the family finance tracker. Talks to `keuangan-server`.
 
-## Getting Started
+## Prerequisites (manual, one-time)
 
-This project is a starting point for a Flutter application.
+1. **Supabase**: create a project, enable the **Google** auth provider.
+2. **Google Cloud OAuth**: create a **Web** client ID (used as `serverClientId`) and an
+   **Android** client ID with the app's SHA-1 (`keytool -list -v -keystore ~/.android/debug.keystore`).
+   applicationId is `com.finance.ivan`.
+3. Put the Supabase Google provider's client ID/secret into Supabase.
 
-A few resources to get you started if this is your first Flutter project:
+## Run
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```bash
+flutter pub get
+flutter run \
+  --dart-define=API_BASE_URL=http://10.0.2.2:4000 \
+  --dart-define=SUPABASE_URL=https://<proj>.supabase.co \
+  --dart-define=SUPABASE_ANON_KEY=<anon> \
+  --dart-define=GOOGLE_WEB_CLIENT_ID=<web-client-id>
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Test
+
+```bash
+flutter test
+```
+
+## Screens
+
+Login (Google) → Onboarding (join via code / continue solo) → Main shell
+(Home = balance + month list + month picker + add; Tetap = recurring rules; Keluarga = invite code + members + logout).

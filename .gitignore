@@ -48,3 +48,6 @@ app.*.map.json
 *.keystore
 **/key.properties
 android/app/google-services.json
+
+# Git worktrees (superpowers)
+.worktrees/

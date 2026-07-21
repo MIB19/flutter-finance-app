@@ -25,6 +25,7 @@ import 'ui/login_screen.dart';
 import 'ui/onboarding_screen.dart';
 import 'ui/recurring_screen.dart';
 import 'ui/splash_screen.dart';
+import 'theme/app_text_theme.dart';
 
 class KeuanganApp extends StatelessWidget {
   final AuthService authService;
@@ -55,7 +56,11 @@ class KeuanganApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: 'Keuangan',
-          theme: ThemeData(colorSchemeSeed: Colors.indigo, useMaterial3: true),
+          theme: ThemeData(
+            colorSchemeSeed: Colors.indigo,
+            useMaterial3: true,
+            textTheme: buildAppTextTheme(),
+          ),
           routes: {
             '/recurring': (_) => const RecurringScreen(),
             '/family': (_) => const FamilyScreen(),

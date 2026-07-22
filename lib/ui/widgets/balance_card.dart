@@ -31,8 +31,8 @@ class BalanceCard extends StatelessWidget {
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(child: _mini('Masuk', summary.income, AppColors.accentPrimaryLight)),
-                Expanded(child: _mini('Keluar', summary.expense, AppColors.accentPink)),
+                Expanded(child: _mini('Masuk', summary.income, Colors.greenAccent)),
+                Expanded(child: _mini('Keluar', summary.expense, Colors.redAccent)),
               ],
             ),
           ],

@@ -36,7 +36,7 @@ class LoginScreen extends StatelessWidget {
                     final busy = state.status == AuthStatus.authenticating;
                     return FilledButton.icon(
                       key: const Key('google-signin'),
-                      style: FilledButton.styleFrom(backgroundColor: AppColors.accentPrimary, foregroundColor: AppColors.textOnDark),
+                      style: FilledButton.styleFrom(backgroundColor: AppColors.accentPrimary, foregroundColor: Colors.white),
                       onPressed: busy ? null : () => context.read<AuthBloc>().add(AuthSignInRequested()),
                       icon: const Icon(Icons.login),
                       label: Text(busy ? 'Masuk...' : 'Masuk dengan Google'),

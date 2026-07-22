@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                     color: AppColors.accentPrimary,
                     borderRadius: BorderRadius.circular(18),
                   ),
-                  child: const Icon(Icons.account_balance_wallet, color: Colors.white, size: 30),
+                  child: const Icon(Icons.account_balance_wallet, color: AppColors.textOnDark, size: 30),
                 ),
               ),
               const SizedBox(height: 14),
@@ -52,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 ),
                 child: Text(
                   'Keuangan Keluarga',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.white),
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColors.textOnDark),
                 ),
               ),
               const SizedBox(height: 4),

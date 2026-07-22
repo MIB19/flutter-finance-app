@@ -11,4 +11,14 @@ void main() {
     expect(find.text('Kelola keuangan keluarga, bareng-bareng'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('disposes cleanly when removed mid-animation', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: SplashScreen()));
+    await tester.pump(const Duration(milliseconds: 300)); // mid-entrance, equalizer already looping
+
+    await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(tester.takeException(), isNull);
+  });
 }

@@ -30,7 +30,7 @@ void main() {
         ),
       );
 
-  testWidgets('shows income breakdown by default', (tester) async {
+  testWidgets('shows expense breakdown by default', (tester) async {
     final month = MockMonthBloc();
     final cats = MockCategoryCubit();
     when(() => month.state).thenReturn(MonthState(
@@ -45,30 +45,30 @@ void main() {
     ]));
 
     await tester.pumpWidget(wrap(month, cats));
-
-    expect(find.text('Gaji'), findsOneWidget);
-    expect(find.text('Makan'), findsNothing);
-  });
-
-  testWidgets('toggling to Expense swaps the breakdown shown', (tester) async {
-    final month = MockMonthBloc();
-    final cats = MockCategoryCubit();
-    when(() => month.state).thenReturn(MonthState(
-      status: MonthStatus.loaded,
-      ym: '2026-07',
-      transactions: [_tx('c1', 8000000, TxType.income), _tx('c2', 500000, TxType.expense)],
-      summary: const MonthSummary(income: 8000000, expense: 500000),
-    ));
-    when(() => cats.state).thenReturn(CategoryState(categories: [
-      Category(id: 'c1', familyId: 'f1', name: 'Gaji', type: TxType.income, isPreset: false),
-      Category(id: 'c2', familyId: 'f1', name: 'Makan', type: TxType.expense, isPreset: false),
-    ]));
-
-    await tester.pumpWidget(wrap(month, cats));
-    await tester.tap(find.text('Expense'));
-    await tester.pump();
 
     expect(find.text('Makan'), findsOneWidget);
     expect(find.text('Gaji'), findsNothing);
+  });
+
+  testWidgets('toggling to Income swaps the breakdown shown', (tester) async {
+    final month = MockMonthBloc();
+    final cats = MockCategoryCubit();
+    when(() => month.state).thenReturn(MonthState(
+      status: MonthStatus.loaded,
+      ym: '2026-07',
+      transactions: [_tx('c1', 8000000, TxType.income), _tx('c2', 500000, TxType.expense)],
+      summary: const MonthSummary(income: 8000000, expense: 500000),
+    ));
+    when(() => cats.state).thenReturn(CategoryState(categories: [
+      Category(id: 'c1', familyId: 'f1', name: 'Gaji', type: TxType.income, isPreset: false),
+      Category(id: 'c2', familyId: 'f1', name: 'Makan', type: TxType.expense, isPreset: false),
+    ]));
+
+    await tester.pumpWidget(wrap(month, cats));
+    await tester.tap(find.text('Income'));
+    await tester.pump();
+
+    expect(find.text('Gaji'), findsOneWidget);
+    expect(find.text('Makan'), findsNothing);
   });
 }

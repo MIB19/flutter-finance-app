@@ -17,7 +17,7 @@ class StatsScreen extends StatefulWidget {
 }
 
 class _StatsScreenState extends State<StatsScreen> {
-  TxType _type = TxType.income;
+  TxType _type = TxType.expense;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +72,7 @@ class _StatsScreenState extends State<StatsScreen> {
               ),
             ),
             const SizedBox(height: 16),
+            if (month.status == MonthStatus.loading) const LinearProgressIndicator(),
             Text(
               _type == TxType.income ? 'Income Breakdown' : 'Expense Breakdown',
               style: Theme.of(context).textTheme.titleMedium,

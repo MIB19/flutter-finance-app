@@ -28,4 +28,24 @@ void main() {
 
     expect(find.text('?'), findsOneWidget);
   });
+
+  testWidgets('CategoryAvatar uses white text on dark backgrounds', (tester) async {
+    // 'd' hashes to index 0 (accentPrimary - dark color)
+    await tester.pumpWidget(const MaterialApp(
+      home: CategoryAvatar(categoryId: 'd', categoryName: 'x'),
+    ));
+
+    final text = tester.widget<Text>(find.text('X'));
+    expect(text.style?.color, Colors.white);
+  });
+
+  testWidgets('CategoryAvatar uses black87 text on light backgrounds', (tester) async {
+    // 'a' hashes to index 2 (accentPrimaryLight - light color)
+    await tester.pumpWidget(const MaterialApp(
+      home: CategoryAvatar(categoryId: 'a', categoryName: 'x'),
+    ));
+
+    final text = tester.widget<Text>(find.text('X'));
+    expect(text.style?.color, Colors.black87);
+  });
 }

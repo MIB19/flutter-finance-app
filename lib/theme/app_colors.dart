@@ -11,7 +11,19 @@ class AppColors {
   static const accentPrimary = Color(0xFF7C4DFF);
   static const accentPrimaryLight = Color(0xFFB39CFF);
   static const accentPink = Color(0xFFF48FB1);
+  static const accentTeal = Color(0xFF4DB6AC);
+  static const accentAmber = Color(0xFFFFB74D);
   static const surfaceSoft = Color(0xFFEDE7F6);
   static const textOnDark = Color(0xFFEDE7FF);
   static const textOnDarkMuted = Color(0xFF9C94C9);
+
+  /// Palette for category avatars. Deterministically selects one color per
+  /// category id (via hash modulo), ensuring consistent visual identity.
+  static const categoryPalette = [
+    accentPrimary,
+    accentPink,
+    accentPrimaryLight,
+    accentTeal,
+    accentAmber,
+  ];
 }

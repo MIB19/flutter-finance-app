@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import '../../core/formatting.dart';
 import '../../models/category.dart';
 import '../../models/transaction.dart';
+import 'category_avatar.dart';
 
 class TransactionTile extends StatelessWidget {
   final Transaction tx;
+  final Category? category;
   final VoidCallback? onTap;
-  const TransactionTile({super.key, required this.tx, this.onTap});
+  const TransactionTile({super.key, required this.tx, required this.category, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +16,7 @@ class TransactionTile extends StatelessWidget {
     final sign = isExpense ? -tx.amount : tx.amount;
     return ListTile(
       onTap: onTap,
+      leading: CategoryAvatar(categoryId: tx.categoryId, categoryName: category?.name ?? ''),
       title: Text(tx.note?.isNotEmpty == true ? tx.note! : (isExpense ? 'Pengeluaran' : 'Pemasukan')),
       subtitle: Text([
         tx.occurredOn,

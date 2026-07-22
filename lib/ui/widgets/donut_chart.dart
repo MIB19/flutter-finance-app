@@ -1,7 +1,9 @@
 import 'dart:math' as math;
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import '../../core/category_breakdown.dart';
 import '../../theme/app_colors.dart';
+import 'category_avatar.dart';
 
 class DonutChart extends StatelessWidget {
   final List<CategoryBreakdown> data;
@@ -13,15 +15,14 @@ class DonutChart extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: CustomPaint(painter: _DonutPainter(data, AppColors.categoryPalette)),
+      child: CustomPaint(painter: _DonutPainter(data)),
     );
   }
 }
 
 class _DonutPainter extends CustomPainter {
   final List<CategoryBreakdown> data;
-  final List<Color> palette;
-  _DonutPainter(this.data, this.palette);
+  _DonutPainter(this.data);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -41,7 +42,7 @@ class _DonutPainter extends CustomPainter {
     for (var i = 0; i < data.length; i++) {
       final sweep = data[i].percent * 2 * math.pi;
       final paint = Paint()
-        ..color = palette[i % palette.length]
+        ..color = categoryAvatarColor(data[i].categoryId)
         ..style = PaintingStyle.stroke
         ..strokeWidth = strokeWidth
         ..strokeCap = StrokeCap.round;
@@ -51,5 +52,6 @@ class _DonutPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _DonutPainter oldDelegate) => oldDelegate.data != data;
+  bool shouldRepaint(covariant _DonutPainter oldDelegate) =>
+      !const ListEquality<CategoryBreakdown>().equals(oldDelegate.data, data);
 }

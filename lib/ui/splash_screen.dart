@@ -10,12 +10,20 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  static bool _hasPlayedEntrance = false;
+
   late final AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..forward();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 900));
+    if (_hasPlayedEntrance) {
+      _controller.value = 1.0;
+    } else {
+      _hasPlayedEntrance = true;
+      _controller.forward();
+    }
   }
 
   @override

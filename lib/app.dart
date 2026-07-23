@@ -25,6 +25,9 @@ import 'ui/login_screen.dart';
 import 'ui/onboarding_screen.dart';
 import 'ui/recurring_screen.dart';
 import 'ui/splash_screen.dart';
+import 'ui/stats_screen.dart';
+import 'ui/transaction_form_screen.dart';
+import 'theme/app_colors.dart';
 import 'theme/app_text_theme.dart';
 
 class KeuanganApp extends StatelessWidget {
@@ -157,21 +160,45 @@ class _MainShell extends StatefulWidget {
 
 class _MainShellState extends State<_MainShell> {
   int _index = 0;
-  static const _tabs = [HomeScreen(), RecurringScreen(), FamilyScreen()];
+  static const _tabs = [HomeScreen(), RecurringScreen(), StatsScreen(), FamilyScreen()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _tabs[_index],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() => _index = i),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-          NavigationDestination(icon: Icon(Icons.repeat), label: 'Tetap'),
-          NavigationDestination(icon: Icon(Icons.group), label: 'Keluarga'),
-        ],
+      floatingActionButton: FloatingActionButton(
+        key: const Key('main-fab-add-transaction'),
+        backgroundColor: AppColors.accentPrimary,
+        onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => TransactionFormScreen(txRepo: context.read<TransactionRepository>()),
+        )),
+        child: const Icon(Icons.add),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 8,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _navItem(icon: Icons.home, label: 'Home', index: 0),
+            _navItem(icon: Icons.repeat, label: 'Tetap', index: 1),
+            const SizedBox(width: 48),
+            _navItem(icon: Icons.pie_chart, label: 'Stats', index: 2),
+            _navItem(icon: Icons.group, label: 'Keluarga', index: 3),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _navItem({required IconData icon, required String label, required int index}) {
+    final selected = _index == index;
+    return IconButton(
+      key: Key('nav-$label'),
+      tooltip: label,
+      icon: Icon(icon, color: selected ? AppColors.accentPrimary : Colors.grey),
+      onPressed: () => setState(() => _index = index),
     );
   }
 }

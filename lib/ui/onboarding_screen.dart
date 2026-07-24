@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import '../repositories/onboarding_repository.dart';
+import 'widgets/dot_grid_background.dart';
 
 class OnboardingScreen extends StatefulWidget {
   final OnboardingRepository repo;
   final String displayName;
   final VoidCallback onDone;
-  const OnboardingScreen({super.key, required this.repo, required this.displayName, required this.onDone});
+  const OnboardingScreen(
+      {super.key,
+      required this.repo,
+      required this.displayName,
+      required this.onDone});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -28,12 +33,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Future<void> _submit() async {
-    setState(() { _busy = true; _error = null; });
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
     try {
       if (_mode == _Mode.join) {
-        await widget.repo.joinFamily(code: _codeCtrl.text.trim(), displayName: widget.displayName);
+        await widget.repo.joinFamily(
+            code: _codeCtrl.text.trim(), displayName: widget.displayName);
       } else {
-        await widget.repo.createFamily(name: _nameCtrl.text.trim().isEmpty ? null : _nameCtrl.text.trim(), displayName: widget.displayName);
+        await widget.repo.createFamily(
+            name: _nameCtrl.text.trim().isEmpty ? null : _nameCtrl.text.trim(),
+            displayName: widget.displayName);
       }
       widget.onDone();
     } catch (e) {
@@ -47,27 +58,51 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Mulai')),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (_mode == _Mode.choose) ...[
-              FilledButton(key: const Key('mode-join'), onPressed: () => setState(() => _mode = _Mode.join), child: const Text('Gabung keluarga (punya kode)')),
-              const SizedBox(height: 12),
-              OutlinedButton(key: const Key('mode-solo'), onPressed: () => setState(() => _mode = _Mode.solo), child: const Text('Lanjut sendiri')),
+      body: DotGridBackground(
+        light: true,
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (_mode == _Mode.choose) ...[
+                FilledButton(
+                    key: const Key('mode-join'),
+                    onPressed: () => setState(() => _mode = _Mode.join),
+                    child: const Text('Gabung keluarga (punya kode)')),
+                const SizedBox(height: 12),
+                OutlinedButton(
+                    key: const Key('mode-solo'),
+                    onPressed: () => setState(() => _mode = _Mode.solo),
+                    child: const Text('Lanjut sendiri')),
+              ],
+              if (_mode == _Mode.join)
+                TextField(
+                    key: const Key('code-field'),
+                    controller: _codeCtrl,
+                    textCapitalization: TextCapitalization.characters,
+                    decoration:
+                        const InputDecoration(labelText: 'Kode keluarga')),
+              if (_mode == _Mode.solo)
+                TextField(
+                    key: const Key('name-field'),
+                    controller: _nameCtrl,
+                    decoration: const InputDecoration(
+                        labelText: 'Nama keluarga (opsional)')),
+              if (_mode != _Mode.choose) ...[
+                const SizedBox(height: 16),
+                if (_error != null)
+                  Text(_error!, style: const TextStyle(color: Colors.red)),
+                FilledButton(
+                    key: const Key('onboarding-submit'),
+                    onPressed: _busy ? null : _submit,
+                    child: Text(_busy ? 'Memproses...' : 'Lanjut')),
+                TextButton(
+                    onPressed: () => setState(() => _mode = _Mode.choose),
+                    child: const Text('Kembali')),
+              ],
             ],
-            if (_mode == _Mode.join)
-              TextField(key: const Key('code-field'), controller: _codeCtrl, textCapitalization: TextCapitalization.characters, decoration: const InputDecoration(labelText: 'Kode keluarga')),
-            if (_mode == _Mode.solo)
-              TextField(key: const Key('name-field'), controller: _nameCtrl, decoration: const InputDecoration(labelText: 'Nama keluarga (opsional)')),
-            if (_mode != _Mode.choose) ...[
-              const SizedBox(height: 16),
-              if (_error != null) Text(_error!, style: const TextStyle(color: Colors.red)),
-              FilledButton(key: const Key('onboarding-submit'), onPressed: _busy ? null : _submit, child: Text(_busy ? 'Memproses...' : 'Lanjut')),
-              TextButton(onPressed: () => setState(() => _mode = _Mode.choose), child: const Text('Kembali')),
-            ],
-          ],
+          ),
         ),
       ),
     );

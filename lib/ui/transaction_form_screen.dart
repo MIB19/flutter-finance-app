@@ -7,6 +7,7 @@ import '../core/formatting.dart';
 import '../models/category.dart';
 import '../models/transaction.dart';
 import '../repositories/transaction_repository.dart';
+import 'widgets/dot_grid_background.dart';
 
 class TransactionFormScreen extends StatefulWidget {
   final TransactionRepository txRepo;
@@ -60,9 +61,13 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
       if (_categoryId == null) setState(() => _error = 'Pilih kategori');
       return;
     }
-    setState(() { _saving = true; _error = null; });
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
     try {
-      final occurredOn = '${monthKeyOf(_date)}-${_date.day.toString().padLeft(2, '0')}';
+      final occurredOn =
+          '${monthKeyOf(_date)}-${_date.day.toString().padLeft(2, '0')}';
       final existing = widget.existing;
       if (existing != null) {
         await widget.txRepo.update(existing.id, {
@@ -92,7 +97,10 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
   Future<void> _delete() async {
     final existing = widget.existing;
     if (existing == null) return;
-    setState(() { _saving = true; _error = null; });
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
     try {
       await widget.txRepo.remove(existing.id);
       _refreshAndPop();
@@ -116,7 +124,9 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
           decoration: const InputDecoration(labelText: 'Nama kategori'),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Batal')),
+          TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Batal')),
           TextButton(
             key: const Key('confirm-add-category'),
             onPressed: () => Navigator.of(ctx).pop(controller.text),
@@ -130,91 +140,118 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
     final cubit = context.read<CategoryCubit>();
     await cubit.add(trimmed, _type);
     if (!mounted) return;
-    final match = cubit.state.categories.where((c) => c.name == trimmed && c.type == _type);
+    final match = cubit.state.categories
+        .where((c) => c.name == trimmed && c.type == _type);
     if (match.isNotEmpty) setState(() => _categoryId = match.first.id);
   }
 
   @override
   Widget build(BuildContext context) {
     final isEdit = widget.existing != null;
-    final categories = context.watch<CategoryCubit>().state.categories.where((c) => c.type == _type).toList();
+    final categories = context
+        .watch<CategoryCubit>()
+        .state
+        .categories
+        .where((c) => c.type == _type)
+        .toList();
     return Scaffold(
       appBar: AppBar(title: Text(isEdit ? 'Edit' : 'Transaksi')),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            SegmentedButton<TxType>(
-              segments: const [
-                ButtonSegment(value: TxType.expense, label: Text('Keluar')),
-                ButtonSegment(value: TxType.income, label: Text('Masuk')),
-              ],
-              selected: {_type},
-              onSelectionChanged: (s) => setState(() { _type = s.first; _categoryId = null; }),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              key: const Key('amount-field'),
-              controller: _amountCtrl,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Nominal (Rp)'),
-              validator: (v) {
-                if (v == null || v.isEmpty) return 'Nominal wajib diisi';
-                final n = int.tryParse(v);
-                if (n == null || n <= 0) return 'Nominal harus angka > 0';
-                return null;
-              },
-            ),
-            const SizedBox(height: 12),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    key: const Key('category-field'),
-                    value: _categoryId,
-                    decoration: const InputDecoration(labelText: 'Kategori'),
-                    items: categories.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(),
-                    onChanged: (v) => setState(() => _categoryId = v),
-                  ),
-                ),
-                IconButton(
-                  key: const Key('add-category'),
-                  onPressed: _addCategory,
-                  icon: const Icon(Icons.add_circle_outline),
-                  tooltip: 'Kategori baru',
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            ListTile(
-              title: const Text('Tanggal'),
-              subtitle: Text('${monthKeyOf(_date)}-${_date.day.toString().padLeft(2, '0')}'),
-              trailing: const Icon(Icons.calendar_today),
-              onTap: () async {
-                final picked = await showDatePicker(context: context, initialDate: _date, firstDate: DateTime(2020), lastDate: DateTime(2100));
-                if (picked != null) setState(() => _date = picked);
-              },
-            ),
-            TextFormField(controller: _noteCtrl, decoration: const InputDecoration(labelText: 'Catatan (opsional)')),
-            if (_error != null) Padding(padding: const EdgeInsets.only(top: 12), child: Text(_error!, style: const TextStyle(color: Colors.red))),
-            const SizedBox(height: 16),
-            FilledButton(
-              key: const Key('save-tx'),
-              onPressed: _saving ? null : _save,
-              child: Text(_saving ? 'Menyimpan...' : 'Simpan'),
-            ),
-            if (isEdit) ...[
-              const SizedBox(height: 8),
-              OutlinedButton(
-                key: const Key('delete-tx'),
-                onPressed: _saving ? null : _delete,
-                style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
-                child: const Text('Hapus'),
+      body: DotGridBackground(
+        light: true,
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              SegmentedButton<TxType>(
+                segments: const [
+                  ButtonSegment(value: TxType.expense, label: Text('Keluar')),
+                  ButtonSegment(value: TxType.income, label: Text('Masuk')),
+                ],
+                selected: {_type},
+                onSelectionChanged: (s) => setState(() {
+                  _type = s.first;
+                  _categoryId = null;
+                }),
               ),
+              const SizedBox(height: 12),
+              TextFormField(
+                key: const Key('amount-field'),
+                controller: _amountCtrl,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Nominal (Rp)'),
+                validator: (v) {
+                  if (v == null || v.isEmpty) return 'Nominal wajib diisi';
+                  final n = int.tryParse(v);
+                  if (n == null || n <= 0) return 'Nominal harus angka > 0';
+                  return null;
+                },
+              ),
+              const SizedBox(height: 12),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      key: const Key('category-field'),
+                      value: _categoryId,
+                      decoration: const InputDecoration(labelText: 'Kategori'),
+                      items: categories
+                          .map((c) => DropdownMenuItem(
+                              value: c.id, child: Text(c.name)))
+                          .toList(),
+                      onChanged: (v) => setState(() => _categoryId = v),
+                    ),
+                  ),
+                  IconButton(
+                    key: const Key('add-category'),
+                    onPressed: _addCategory,
+                    icon: const Icon(Icons.add_circle_outline),
+                    tooltip: 'Kategori baru',
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              ListTile(
+                title: const Text('Tanggal'),
+                subtitle: Text(
+                    '${monthKeyOf(_date)}-${_date.day.toString().padLeft(2, '0')}'),
+                trailing: const Icon(Icons.calendar_today),
+                onTap: () async {
+                  final picked = await showDatePicker(
+                      context: context,
+                      initialDate: _date,
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime(2100));
+                  if (picked != null) setState(() => _date = picked);
+                },
+              ),
+              TextFormField(
+                  controller: _noteCtrl,
+                  decoration:
+                      const InputDecoration(labelText: 'Catatan (opsional)')),
+              if (_error != null)
+                Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Text(_error!,
+                        style: const TextStyle(color: Colors.red))),
+              const SizedBox(height: 16),
+              FilledButton(
+                key: const Key('save-tx'),
+                onPressed: _saving ? null : _save,
+                child: Text(_saving ? 'Menyimpan...' : 'Simpan'),
+              ),
+              if (isEdit) ...[
+                const SizedBox(height: 8),
+                OutlinedButton(
+                  key: const Key('delete-tx'),
+                  onPressed: _saving ? null : _delete,
+                  style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
+                  child: const Text('Hapus'),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

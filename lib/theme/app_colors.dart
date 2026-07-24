@@ -8,6 +8,7 @@ class AppColors {
   AppColors._();
 
   static const bgHero = Color(0xFF150F2E);
+  static const bgLight = Color(0xFFF7F5FC);
   static const accentPrimary = Color(0xFF7C4DFF);
   static const accentPrimaryLight = Color(0xFFB39CFF);
   static const accentPink = Color(0xFFF48FB1);

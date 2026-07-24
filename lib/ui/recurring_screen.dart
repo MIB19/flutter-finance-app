@@ -10,7 +10,18 @@ class RecurringScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pengeluaran Tetap')),
+      appBar: AppBar(
+        title: const Text('Pengeluaran Tetap'),
+        actions: [
+          IconButton(
+            key: const Key('add-rule'),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const RecurringFormScreen()),
+            ),
+            icon: const Icon(Icons.add),
+          ),
+        ],
+      ),
       body: BlocBuilder<RecurringBloc, RecurringState>(
         builder: (context, state) {
           if (state.loading && state.rules.isEmpty) return const Center(child: CircularProgressIndicator());
@@ -29,13 +40,6 @@ class RecurringScreen extends StatelessWidget {
             )).toList(),
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        key: const Key('add-rule'),
-        onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const RecurringFormScreen()),
-        ),
-        child: const Icon(Icons.add),
       ),
     );
   }

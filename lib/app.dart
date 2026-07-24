@@ -146,26 +146,26 @@ class _AuthedGateState extends State<_AuthedGate> {
           _loaded = true;
           _loadAll();
         }
-        return const _MainShell();
+        return const MainShell();
       },
     );
   }
 }
 
-class _MainShell extends StatefulWidget {
-  const _MainShell();
+class MainShell extends StatefulWidget {
+  const MainShell({super.key});
   @override
-  State<_MainShell> createState() => _MainShellState();
+  State<MainShell> createState() => _MainShellState();
 }
 
-class _MainShellState extends State<_MainShell> {
+class _MainShellState extends State<MainShell> {
   int _index = 0;
   static const _tabs = [HomeScreen(), RecurringScreen(), StatsScreen(), FamilyScreen()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _tabs[_index],
+      body: IndexedStack(index: _index, children: _tabs),
       floatingActionButton: FloatingActionButton(
         key: const Key('main-fab-add-transaction'),
         backgroundColor: AppColors.accentPrimary,

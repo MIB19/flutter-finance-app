@@ -11,7 +11,21 @@ class SupabaseAuthService implements AuthService {
       : _google = GoogleSignIn(serverClientId: webClientId);
 
   @override
-  Future<String?> currentToken() async => _supabase.auth.currentSession?.accessToken;
+  Future<String?> currentToken() async {
+    final session = _supabase.auth.currentSession;
+    if (session == null) return null;
+    if (!session.isExpired) return session.accessToken;
+    // Supabase.initialize() doesn't await its internal session-recovery/refresh
+    // (it's fire-and-forget), so a token that expired while the app was closed
+    // can still be sitting in currentSession when this is first called. Refresh
+    // explicitly rather than handing the backend a token we already know is stale.
+    try {
+      final response = await _supabase.auth.refreshSession();
+      return response.session?.accessToken;
+    } catch (_) {
+      return null;
+    }
+  }
 
   @override
   Future<void> signInWithGoogle() async {

@@ -91,7 +91,7 @@ class _Root extends StatelessWidget {
           case AuthStatus.unauthenticated:
             return const LoginScreen();
           case AuthStatus.authenticated:
-            return _AuthedGate(onboardingRepo: onboardingRepo, displayName: authService.displayName ?? 'Saya');
+            return AuthedGate(onboardingRepo: onboardingRepo, displayName: authService.displayName ?? 'Saya');
         }
       },
     );
@@ -99,16 +99,16 @@ class _Root extends StatelessWidget {
 }
 
 /// After auth: bootstrap -> onboarding or main shell.
-class _AuthedGate extends StatefulWidget {
+class AuthedGate extends StatefulWidget {
   final OnboardingRepository onboardingRepo;
   final String displayName;
-  const _AuthedGate({required this.onboardingRepo, required this.displayName});
+  const AuthedGate({super.key, required this.onboardingRepo, required this.displayName});
 
   @override
-  State<_AuthedGate> createState() => _AuthedGateState();
+  State<AuthedGate> createState() => _AuthedGateState();
 }
 
-class _AuthedGateState extends State<_AuthedGate> {
+class _AuthedGateState extends State<AuthedGate> {
   Future<bool>? _needsOnboarding;
   bool _loaded = false;
 
@@ -116,6 +116,12 @@ class _AuthedGateState extends State<_AuthedGate> {
   void initState() {
     super.initState();
     _needsOnboarding = widget.onboardingRepo.needsOnboarding();
+  }
+
+  void _retryBootstrap() {
+    setState(() {
+      _needsOnboarding = widget.onboardingRepo.needsOnboarding();
+    });
   }
 
   void _loadAll() {
@@ -132,6 +138,32 @@ class _AuthedGateState extends State<_AuthedGate> {
     return FutureBuilder<bool>(
       future: _needsOnboarding,
       builder: (context, snap) {
+        // Without this, a failed bootstrap call (e.g. an expired-token 401 right
+        // after the app was closed for hours) left the user stuck on the splash
+        // screen forever — `!snap.hasData` never becomes false once the future
+        // has errored, and there was nothing distinguishing "still loading" from
+        // "failed" for the user to act on.
+        if (snap.hasError) {
+          return Scaffold(
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Gagal memuat data. Periksa koneksi internet kamu.'),
+                    const SizedBox(height: 12),
+                    FilledButton(
+                      key: const Key('bootstrap-retry'),
+                      onPressed: _retryBootstrap,
+                      child: const Text('Coba Lagi'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
         if (!snap.hasData) return const SplashScreen();
         if (snap.data == true) {
           return OnboardingScreen(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:keuangan_app/theme/app_colors.dart';
 import 'package:keuangan_app/ui/widgets/dot_grid_background.dart';
 
 void main() {
@@ -13,14 +14,24 @@ void main() {
   });
 
   testWidgets(
-      'light variant paints a lighter background than the default dark variant',
+      'light variant uses a lighter background color than the dark variant',
       (tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: DotGridBackground(light: true, child: Text('light content')),
     ));
-
     expect(find.text('light content'), findsOneWidget);
-    expect(find.byType(CustomPaint), findsWidgets);
-    expect(tester.takeException(), isNull);
+
+    final lightContainer =
+        tester.widgetList<Container>(find.byType(Container)).first;
+    expect(lightContainer.color, AppColors.bgLight);
+
+    await tester.pumpWidget(const MaterialApp(
+      home: DotGridBackground(child: Text('dark content')),
+    ));
+    expect(find.text('dark content'), findsOneWidget);
+
+    final darkContainer =
+        tester.widgetList<Container>(find.byType(Container)).first;
+    expect(darkContainer.color, AppColors.bgHero);
   });
 }

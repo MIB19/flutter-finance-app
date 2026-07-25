@@ -11,11 +11,13 @@ class DotGridBackground extends StatelessWidget {
   final Widget child;
   final double borderRadius;
   final bool light;
+  final bool expand;
   const DotGridBackground(
       {super.key,
       required this.child,
       this.borderRadius = 0,
-      this.light = false});
+      this.light = false,
+      this.expand = true});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class DotGridBackground extends StatelessWidget {
                   color: light ? AppColors.bgLight : AppColors.bgHero)),
           Positioned.fill(
               child: CustomPaint(painter: _DotGridPainter(light: light))),
-          child,
+          expand ? Positioned.fill(child: child) : child,
         ],
       ),
     );

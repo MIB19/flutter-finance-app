@@ -16,23 +16,31 @@ class BalanceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return DotGridBackground(
       borderRadius: 24,
+      expand: false,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('YOUR BALANCE', style: TextStyle(color: AppColors.textOnDarkMuted, fontSize: 11)),
+            const Text('YOUR BALANCE',
+                style:
+                    TextStyle(color: AppColors.textOnDarkMuted, fontSize: 11)),
             const SizedBox(height: 6),
             Text(
               formatRupiah(balance),
               key: const Key('balance-value'),
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: AppColors.textOnDark),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium
+                  ?.copyWith(color: AppColors.textOnDark),
             ),
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(child: _mini('Masuk', summary.income, Colors.greenAccent)),
-                Expanded(child: _mini('Keluar', summary.expense, Colors.redAccent)),
+                Expanded(
+                    child: _mini('Masuk', summary.income, Colors.greenAccent)),
+                Expanded(
+                    child: _mini('Keluar', summary.expense, Colors.redAccent)),
               ],
             ),
           ],
@@ -44,8 +52,11 @@ class BalanceCard extends StatelessWidget {
   Widget _mini(String label, int value, Color valueColor) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: AppColors.textOnDarkMuted, fontSize: 12)),
-          Text(formatRupiah(value), style: TextStyle(color: valueColor, fontWeight: FontWeight.w600)),
+          Text(label,
+              style: const TextStyle(
+                  color: AppColors.textOnDarkMuted, fontSize: 12)),
+          Text(formatRupiah(value),
+              style: TextStyle(color: valueColor, fontWeight: FontWeight.w600)),
         ],
       );
 }

@@ -72,7 +72,7 @@ class _StatsScreenState extends State<StatsScreen> {
                               formatRupiah(total),
                               key: const Key('stats-total'),
                               style: const TextStyle(
-                                  color: Colors.white,
+                                  color: AppColors.textOnDark,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20),
                             ),

@@ -52,3 +52,6 @@ android/app/google-services.json
 
 # Git worktrees (superpowers)
 .worktrees/
+
+# Test coverage output
+coverage/

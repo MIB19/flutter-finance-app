@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/formatting.dart';
 import '../../models/category.dart';
 import '../../models/transaction.dart';
+import '../../theme/app_colors.dart';
 import 'category_avatar.dart';
 
 class TransactionTile extends StatelessWidget {
@@ -23,7 +24,7 @@ class TransactionTile extends StatelessWidget {
         if (tx.createdByName != null) '• ${tx.createdByName}',
         if (tx.source == 'recurring') '• tetap',
       ].join(' ')),
-      trailing: Text(formatRupiah(sign), style: TextStyle(color: isExpense ? Colors.red : Colors.green)),
+      trailing: Text(formatRupiah(sign), style: TextStyle(color: isExpense ? AppColors.expenseOnLight : AppColors.incomeOnLight)),
     );
   }
 }

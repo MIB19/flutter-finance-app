@@ -18,6 +18,14 @@ class AppColors {
   static const textOnDark = Color(0xFFEDE7FF);
   static const textOnDarkMuted = Color(0xFF9C94C9);
 
+  /// Semantic income/expense colors, split by surface brightness since a
+  /// single shade can't have adequate contrast on both a dark hero card
+  /// (BalanceCard) and a light card/list row (TransactionTile).
+  static const incomeOnDark = Colors.greenAccent;
+  static const expenseOnDark = Colors.redAccent;
+  static const incomeOnLight = Colors.green;
+  static const expenseOnLight = Colors.red;
+
   /// Palette for category avatars. Deterministically selects one color per
   /// category id (via hash modulo), ensuring consistent visual identity.
   static const categoryPalette = [

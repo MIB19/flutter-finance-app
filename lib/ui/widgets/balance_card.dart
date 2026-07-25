@@ -38,9 +38,9 @@ class BalanceCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                    child: _mini('Masuk', summary.income, Colors.greenAccent)),
+                    child: _mini('Masuk', summary.income, AppColors.incomeOnDark)),
                 Expanded(
-                    child: _mini('Keluar', summary.expense, Colors.redAccent)),
+                    child: _mini('Keluar', summary.expense, AppColors.expenseOnDark)),
               ],
             ),
           ],

@@ -27,7 +27,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Keuangan Keluarga',
+                  'Finance Ivan',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColors.textOnDark),
                 ),
                 const SizedBox(height: 32),

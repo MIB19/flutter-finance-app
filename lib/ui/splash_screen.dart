@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
                 ),
                 child: Text(
-                  'Keuangan Keluarga',
+                  'Finance Ivan',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColors.textOnDark),
                 ),
               ),

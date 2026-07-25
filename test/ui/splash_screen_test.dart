@@ -35,7 +35,7 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: SplashScreen()));
     await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.text('Keuangan Keluarga'), findsOneWidget);
+    expect(find.text('Finance Ivan'), findsOneWidget);
     expect(find.text('Kelola keuangan keluarga, bareng-bareng'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

@@ -58,7 +58,7 @@ class KeuanganApp extends StatelessWidget {
           BlocProvider(create: (_) => FamilyCubit(familyRepo)),
         ],
         child: MaterialApp(
-          title: 'Keuangan',
+          title: 'Finance Ivan',
           theme: ThemeData(
             colorSchemeSeed: Colors.indigo,
             useMaterial3: true,
